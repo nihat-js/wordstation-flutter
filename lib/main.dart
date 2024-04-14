@@ -1,20 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:wordstation_flutter/src/components/circular_layout.dart';
+import 'package:wordstation_flutter/src/providers/counter.dart';
+import 'package:wordstation_flutter/src/router.dart';
+import 'package:provider/provider.dart';
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => Counter()),
+    ],
+    child:  App(),
+    ));
+}
 
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
 
-void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'WordStation',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      routerConfig: routerConfig,
+    );
+  }
+}
 
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+
+
+// ... other code ...
+
+class WordStationGame extends StatefulWidget {
+  @override
+  _WordStationGameState createState() => _WordStationGameState();
+}
+
+class _WordStationGameState extends State<WordStationGame> {
+  List<String> letters = ["a", "d", "a", "m"];
+  List<String> vocabulary = ["adam", "dama", "ada"];
+  String currentTypedWord = '';
+  String feedbackMessage = '';
+
+  void checkWordValidity() {
+    if (vocabulary.contains(currentTypedWord)) {
+      setState(() {
+        feedbackMessage = 'Congratulations! You found a valid word: $currentTypedWord';
+      });
+    } else {
+      setState(() {
+        feedbackMessage = '$currentTypedWord is not a valid word. Try again!';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('WordStation'),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: letters.length,
+              children: letters.map((letter) {
+                return GestureDetector(
+                  onTapDown: (_) {
+                    setState(() {
+                      currentTypedWord += letter;
+                    });
+                  },
+                  onTapCancel: () {
+                    setState(() {
+                      currentTypedWord = '';
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                    ),
+                    child: Center(
+                      child: Text(letter),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          CircularButtonLayout(),
+          GestureDetector(
+            onTap: () {
+              checkWordValidity();
+              setState(() {
+                currentTypedWord = '';
+              });
+            },
+            child: Container(
+              color: Colors.blue,
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Check Word',
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            feedbackMessage,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
+      ),
+    );
+  }
 }
