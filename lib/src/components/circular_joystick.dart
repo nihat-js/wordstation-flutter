@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import "dart:math";
 
-class CircularJoystick extends StatelessWidget {
+import 'package:flutter/services.dart';
+
+class CircularJoystick extends StatefulWidget {
   const CircularJoystick({super.key});
 
+  @override
+  State<CircularJoystick> createState() => _CircularJoystickState();
+}
+
+class _CircularJoystickState extends State<CircularJoystick> {
   double calculateLeftPosition(double parentWidth, double childWidth) {
     return (parentWidth - childWidth) / 2;
   }
@@ -12,36 +20,62 @@ class CircularJoystick extends StatelessWidget {
     return (parentWidth - childWidth) / 2;
   }
 
+  bool isDown = false;
+
+  List<String> letters = ["A", "D", "A", "M", "E", "O"];
   @override
   Widget build(BuildContext context) {
     double size = 300;
     double buttonRadius = size / 4;
-
-    var buttons = _buildButtons(["A", "D", "A", "M", "E", "O"],
+    var buttons = _buildButtons(letters,
         radius: buttonRadius, cx: size / 2, cy: size / 2);
 
     return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: DecoratedBox(
-          decoration: BoxDecoration(color: Colors.blue),
-          child: Stack(
-            children: [
-              Positioned(
-                left: calculateLeftPosition(size, buttonRadius),
-                top: calculateTopPosition(size, buttonRadius),
-                child: SizedBox(
-                  width: buttonRadius,
-                  height: buttonRadius,
-                  child: ElevatedButton(
-                    child: Center(child: Icon(Icons.refresh_rounded)),
-                    onPressed: () => {},
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onPanUpdate: (event) {
+          if (isDown == true) {
+            print("moving");
+          }
+        },
+        onPanDown: (event) {
+          setState(() {
+            isDown = true;
+            print("pointerdown  ");
+          });
+        },
+        onPanEnd: (event) {
+          setState(() {
+            isDown = false;
+            print("pointerup ");
+          });
+        },
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Stack(
+              children: [
+                Positioned(
+                  left: calculateLeftPosition(size, buttonRadius),
+                  top: calculateTopPosition(size, buttonRadius),
+                  child: SizedBox(
+                    width: buttonRadius,
+                    height: buttonRadius,
+                    child: ElevatedButton(
+                      child: Center(child: Icon(Icons.refresh_rounded)),
+                      onPressed: () => {
+                        setState(() {
+                          letters.shuffle();
+                        })
+                      },
+                    ),
                   ),
                 ),
-              ),
-              ...buttons,
-            ],
+                ...buttons,
+              ],
+            ),
           ),
         ),
       ),

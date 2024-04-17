@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wordstation_flutter/src/components/circular_joystick.dart';
-import 'package:wordstation_flutter/src/providers/counter.dart';
+import 'package:wordstation_flutter/src/providers/user.dart';
 import 'package:wordstation_flutter/src/routes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => Counter()),
-    ],
+    providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
     child: App(),
   ));
 }
@@ -24,7 +21,7 @@ class App extends StatelessWidget {
       ),
       routes: routes,
       initialRoute: '/entry',
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:wordstation_flutter/src/providers/counter.dart';
 class EntryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final countProvider = Provider.of<Counter>(context);
+    // final countProvider = Provider.of<Counter>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -15,16 +15,11 @@ class EntryScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("My count is" + countProvider.count.toString()),
             ElevatedButton(
               child: Text('Continue'),
               onPressed: () {
-                countProvider.increment();
+                // countProvider.increment();
                 Navigator.pushReplacementNamed(context, "/game");
-                // Navigator.push(
-                // context,
-                // MaterialPageRoute(builder: (context) => WordStationGame()),
-                // );
               },
             ),
             ElevatedButton(
