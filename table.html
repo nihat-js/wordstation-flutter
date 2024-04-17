@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script src="">
+
+
+const prefernce =  {
+  
+
+  useCacheFromLocalStorage : true,
+}
+
+class Table {
+
+  static  createTable(id,head,body,preference){
+
+    let changeColumnsModal = `
+    <div class="modal">
+      <div class="modal-body">
+        ${head.map( (item) =>  `
+          <div>
+            <input type="checkbox" />
+            <span>${item.name}</span>
+          </div>
+          `  )}
+          <div class="actions">
+            <button name="save" />
+            <button name="cancel" />
+          </div>
+      </div>
+
+    </div>`
+
+    let table = document.createElement("table");
+    tableSession = localStorage.getItem('#mytable-session');
+
+    let thead = `
+      <tr>
+        ${head.map(function(d) { return `<th>  ${d.name}</th>` }) }
+        <th class="actions=">
+          ${preferences.details.isVisible && `<button onclick > Details </button> }
+          ${preferences.edit.isVisible && `<button onclick > Edit </button> }
+          ${preferences.delete.isVisible && `<button onclick > Delete </button> }
+        </th>
+        ${d.actions}
+      </tr>
+    `
+
+    // let tbody = "<tbody></tbody>";
+
+    
+    let tbody = body.map(function (b) { 
+      let html = "tr>"
+      if (preferences.
+    )
+      html+= head.forEach(h =>{
+        if (h.)
+      })
+    html+=
+    })
+  }
+}
+
+
+</script>
+
+</html>
