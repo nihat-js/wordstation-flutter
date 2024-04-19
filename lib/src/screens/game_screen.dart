@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _CharacterState extends State<Character> {
   double positionX = 0;
   double positionY = 0;
 
-  double moveSpeed = 20;
+  double moveSpeed = 5;
   double mapOffset = 0;
   List<String> images = [
     "images/plx-2.png",
@@ -72,7 +73,7 @@ class _CharacterState extends State<Character> {
 
   List<Widget> renderBackgroundWidgets() {
     List<Widget> widgets = [];
-    int x = max((positionX / imageWidth).ceil(), 1);
+    int x = max((positionX / imageWidth).toInt(), 1);
     double offset = positionX % imageWidth;
 
     double firstImageWidth = imageWidth - offset;
@@ -80,10 +81,10 @@ class _CharacterState extends State<Character> {
     double leftImageWidth = screenWidth - secondImageWidth - firstImageWidth;
     double thirdImageWidth = leftImageWidth > 0 ? leftImageWidth : 0;
 
-    print(x);
-    print(firstImageWidth);
-    print(secondImageWidth);
-    print(thirdImageWidth);
+    // print(x);
+    // print(firstImageWidth);
+    // print(secondImageWidth);
+    // print(thirdImageWidth);
 
     widgets.add(
       Positioned(
@@ -92,7 +93,7 @@ class _CharacterState extends State<Character> {
         width: firstImageWidth,
         height: 200,
         child: Image(
-          image: AssetImage(images[x - 1 % images.length]),
+          image: AssetImage(images[(x - 1) % images.length]),
           fit: BoxFit.cover,
         ),
       ),
@@ -130,6 +131,20 @@ class _CharacterState extends State<Character> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Timer.periodic(Duration(milliseconds: 40), (timer) {
+      setState(() {
+        if (isRunning) {
+          positionX += moveSpeed;
+          print(positionX);
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: screenWidth,
@@ -151,7 +166,6 @@ class _CharacterState extends State<Character> {
                 onTapDown: (TapDownDetails details) {
                   setState(() {
                     isRunning = true;
-                    positionX += moveSpeed;
                   });
                 },
                 onTapCancel: () {
