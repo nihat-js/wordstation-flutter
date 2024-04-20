@@ -1,14 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  int _coins = 500;
-  int _diamonds = 5;
+  late int coins;
+  late int diamonds;
+  late int level;
+  late bool soundOn;
+  late bool musicOn;
 
-  int get coins => _coins;
-  int get diamonds => _diamonds;
+  late SharedPreferences prefs;
+  UserProvider({required this.prefs}) {
+    coins = prefs.getInt('coins') ?? 500;
+    diamonds = prefs.getInt('diamonds') ?? 5;
+    level = prefs.getInt('level') ?? 1;
+    soundOn = prefs.getBool("soundOn") ?? true;
+    musicOn = prefs.getBool("musicOn") ?? true;
+  }
 
-  void earnAward() {}
-
-  void spendAward() {}
+  Future toggleSound() async {
+    await prefs.setBool("soundOn", !soundOn);
+    soundOn = !soundOn;
+    notifyListeners();
+  }
 }

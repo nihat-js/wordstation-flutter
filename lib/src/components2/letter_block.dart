@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordstation_flutter/src/screens/game_screen_2.dart';
+import 'package:wordstation_flutter/src/screens/game_screen.dart';
 
 class LetterBlock extends StatefulWidget {
   final double x;

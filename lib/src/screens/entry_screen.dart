@@ -1,35 +1,89 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:wordstation_flutter/src/providers/counter.dart';
+import 'package:wordstation_flutter/src/components/status_bar.dart';
+import 'package:wordstation_flutter/src/providers/user.dart';
 
 class EntryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final countProvider = Provider.of<Counter>(context);
+    final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('WordStation'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              child: Text('Continue'),
-              onPressed: () {
-                // countProvider.increment();
-                Navigator.pushReplacementNamed(context, "/game");
-              },
-            ),
-            ElevatedButton(
-              child: Text('Settings'),
-              onPressed: () {
-                // Navigate to settings screen
-              },
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/bg.jpg"),
+            fit: BoxFit.cover,
+          ),
         ),
+        child: Column(children: [
+          StatusBar(),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: 70,
+                ),
+                Text(
+                  "Word Station",
+                  style: TextStyle(
+                      color: Colors.yellowAccent,
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 150,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                                context, "/level-map");
+                          },
+                          child: Image(
+                            image: AssetImage(
+                                "images/png/Buttons/Square-Medium/Levels/Default.png"),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(context, "aa");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 60),
+                            child: Image(
+                              image: AssetImage(
+                                  "images/png/Buttons/Square-Medium/Play/Default.png"),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            await userProvider.toggleSound();
+                          },
+                          child: Image(
+                              image: AssetImage(userProvider.soundOn
+                                  ? "images/png/Buttons/Square-Medium/SoundOn/Default.png"
+                                  : "images/png/Buttons/Square-Medium/SoundOff/Default.png")),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(onPressed: () {}, child: Text("Credits")),
+                    ElevatedButton(onPressed: () {}, child: Text("Quit"))
+                  ],
+                )
+              ],
+            ),
+          ),
+        ]),
       ),
     );
   }
