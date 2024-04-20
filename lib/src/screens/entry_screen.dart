@@ -76,7 +76,12 @@ class EntryScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    ElevatedButton(onPressed: () {}, child: Text("Credits")),
+                    ElevatedButton(
+                        onPressed: () {
+                          userProvider.makeTransaction(
+                              payloadDiamonds: 5, payloadCoins: 50);
+                        },
+                        child: Text("Credits")),
                     ElevatedButton(onPressed: () {}, child: Text("Quit"))
                   ],
                 )

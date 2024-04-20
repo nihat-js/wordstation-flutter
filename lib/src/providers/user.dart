@@ -11,7 +11,7 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   late SharedPreferences prefs;
   UserProvider({required this.prefs}) {
-    coins = prefs.getInt('coins') ?? 500;
+    coins = prefs.getInt('coins') ?? 200;
     diamonds = prefs.getInt('diamonds') ?? 5;
     level = prefs.getInt('level') ?? 1;
     soundOn = prefs.getBool("soundOn") ?? true;
@@ -21,6 +21,15 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future toggleSound() async {
     await prefs.setBool("soundOn", !soundOn);
     soundOn = !soundOn;
+    notifyListeners();
+  }
+
+  Future makeTransaction(
+      {required int payloadDiamonds, required int payloadCoins}) async {
+    coins += payloadCoins;
+    diamonds += payloadDiamonds;
+    await prefs.setInt("coins", coins);
+    await prefs.setInt("diamonds", diamonds);
     notifyListeners();
   }
 }
