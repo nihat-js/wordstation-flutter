@@ -1,11 +1,23 @@
 import 'dart:math';
 
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:wordstation_flutter/src/components2/letter_block.dart';
 
 class Vector2 {
-  double  x;
-  double  y;
-  Vector2(this.x,this.y);
+  double x;
+  double y;
+  Vector2(this.x, this.y);
+}
+
+class Direction {
+  bool isHorizontal;
+  get isVertical => !isHorizontal;
+  Direction({required this.isHorizontal});
+
+  void toggleAxis() {
+    isHorizontal = !isHorizontal;
+  }
 }
 
 class GameScreen2 extends StatefulWidget {
@@ -14,100 +26,146 @@ class GameScreen2 extends StatefulWidget {
   @override
   State<GameScreen2> createState() => _GameScreen2State();
 }
-  int gridSize = 20;
-  int maxGrid = 20;
+
+int gridSize = 30;
+int maxGrid = 20;
+Direction d = Direction(isHorizontal: true);
 
 class _GameScreen2State extends State<GameScreen2> {
-
-  List<String> words = ["imtina","tin","iman","amin","min"];
+  List<String> words = [
+    "imtina",
+    "tin",
+    "iman",
+    "amin",
+  ];
   List<LetterBlock> letterBlocks = [];
-  String direction = "v";   //"v";
-  Vector2 penPosition = Vector2(5,5);
 
-  void toggleDirection(){
-    direction = direction == "h" ? "v" : "h";
-  }
-
-  bool canWordFit(String word){
-    double xCopy = penPosition.x;
-    double = penPosition.y;
-    return word.characters.every((element) => {
-      
-      return letterBlocks.every((element2) => element.x != element2.x || element.y != element2.y )}
-      );  
-  }
-
-  void render(){
-    while(words.isNotEmpty){
-      String word = words.removeAt(Random().nextInt(words.length));
-      // double crossAxis = direction == "h" ? penPosition.y : penPosition.x;
-
-      // double mainAxis = direction == "h" ? penPosition.x : penPosition.y;
-      var predictedLastMainPosition =  (direction == "h" ? penPosition.x : penPosition.y) + word.length ;
-    
-      if (predictedLastMainPosition > maxGrid){
-        words.add(word); // return back to list, because it exceeds boundary
-        continue;
+  void buildCrossword() {
+    String firstCrosswordWord = "";
+    words.forEach((element) {
+      if (element.length > firstCrosswordWord.length) {
+        firstCrosswordWord = element;
       }
+    });
+    double x = 6; //temporary variable
+    firstCrosswordWord.split("").forEach((letter) {
+      letterBlocks.add(LetterBlock(
+        x: x,
+        y: 6,
+        letter: letter,
+        isRevealed: false,
+        fullWord: firstCrosswordWord,
+        isHorizontal: true,
+      ));
+      x++;
+    });
+    words.remove(firstCrosswordWord);
+    int step = 0; // debugging infinite loop
+    while (words.isNotEmpty) {
+      if (step++ == 20) {
+        break;
+      }
+      d.toggleAxis();
 
-      double xCopy =penPosition.x; 
-      double yCopy =penPosition.y;
-      List<Vector2> predictedPositions = List.filled(words.length,"---").map((e)  {
-        direction == "h" ? xCopy++ : yCopy++;
-        return Vector2(xCopy,yCopy);
-      }).toList();
-
-      var myBlocks = [];
-      for(var i = 0; i < word.length; i++){
-        myBlocks.add(LetterBlock(x: penPosition.x, y: penPosition.y, letter: word[i], isRevealed: false, fullWord: word));
-        if (direction == "h"){
-          penPosition.x++;
-        }else{
-          penPosition.y++;
+      var intersectionLetterBlock = letterBlocks
+          .where((element) => element.isUsedAsIntersection == false && element.isHorizontal != d.isHorizontal)
+          .toList()
+          .random(); // filter de var
+      var nextWord = words.random();
+      while (true) {
+        if (nextWord.contains(intersectionLetterBlock.letter)) {
+          break;
+        } else {
+          intersectionLetterBlock = letterBlocks.random(); // filter de var
+          nextWord = words.random();
         }
       }
+
+      // now finding offset and checking validity
+      // one grid cannot contain more than one letter
+      // one letter can only be used 1 time as an part of intersection
+      int offset = nextWord.indexOf(intersectionLetterBlock.letter);
+      double startX = d.isHorizontal
+          ? intersectionLetterBlock.x - offset
+          : intersectionLetterBlock.x;
+      double startY = d.isVertical
+          ? intersectionLetterBlock.y - offset
+          : intersectionLetterBlock.y;
+      double copyStartX = startX;
+      double copyStartY = startY;
+      print("next word is $nextWord");
+      print("intersection letter is ${intersectionLetterBlock.letter}");
+      print("isHorizontal ${d.isHorizontal}");
+      print("startX is $startX startY is $startY");
+      bool canPlaceWord = nextWord.split("").every((letter) {
+        //   letterBlocks.add(LetterBlock(x: startX, y: startY, letter: letter, isRevealed: false, fullWord: nextWord, isHorizontal: d.isHorizontal));
+        // print("letter is $letter, position x is $copyStartX  and position y is $copyStartY");
+        // the grid should be whether  empty or equal to intersection block
+        bool st = letterBlocks.every((element) {
+          bool st1 = element.x != copyStartX || element.y != copyStartY;
+          bool st2 = element.x == intersectionLetterBlock.x &&
+              element.y == intersectionLetterBlock.y;
+
+          bool st3 = true;
+          if (d.isHorizontal && copyStartX == element.x) {
+            bool st3 =
+                copyStartY + 1 != element.y && copyStartY - 1 != element.y;
+          }
+
+          if (d.isVertical && copyStartY == element.y) {
+            bool st3 =
+                copyStartX + 1 != element.x && copyStartX - 1 != element.x;
+          }
+          return st1 || st2 && st3;
+        });
+        d.isHorizontal ? copyStartX++ : copyStartY++;
+        return st;
+      });
+
+      if (!canPlaceWord) {
+        d.toggleAxis(); // return back and get another word
+        continue;
+      }
+      print("yes you can place word");
+      intersectionLetterBlock.isUsedAsIntersection = true;
+      nextWord.split("").forEach((letter) {
+        letterBlocks.add(LetterBlock(
+            x: startX,
+            y: startY,
+            letter: letter,
+            isRevealed: false,
+            fullWord: nextWord,
+            isHorizontal: d.isHorizontal));
+        d.isHorizontal ? startX++ : startY++;
+      });
+      words.remove(nextWord);
     }
+    setState(() {});
   }
-
 
   @override
   Widget build(BuildContext context) {
+    buildCrossword();
+    print("rendering");
+    letterBlocks.forEach((l) {
+      print("This is x: ${l.x} y: ${l.y}");
+    });
     return Scaffold(
-      body: SizedBox(
-        width: (gridSize * maxGrid).toDouble()+ 20,
-        height: (gridSize * maxGrid).toDouble() + 20,
-        child: Stack(
-          children: [
-
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border.all(width: 3, color: Colors.blue),
+        ),
+        child: SizedBox(
+          width: (gridSize * maxGrid).toDouble() + 20,
+          height: (gridSize * maxGrid).toDouble() + 20,
+          child: Stack(
+            children: [
+              // Positioned(left: 100, top: 100, child: Text("GelG")),
+              ...letterBlocks,
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class LetterBlock extends StatelessWidget {
-  late double x;
-  late double y;
-  late bool isRevealed = false;
-  late String letter;
-  late String fullWord;
-  LetterBlock({required double x, required double y,required String letter,required bool isRevealed,required String fullWord,  super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left:  ( x * gridSize).toDouble() ,
-      top: y * gridSize.toDouble(),
-      width: maxGrid.toDouble() ,
-      height: maxGrid.toDouble() ,
-      child: Container(
-        decoration : BoxDecoration(
-          border: Border.all(width: 2,color: Colors.blue)
-        ),
-        child: Text(letter)
-      ),
-      
     );
   }
 }
