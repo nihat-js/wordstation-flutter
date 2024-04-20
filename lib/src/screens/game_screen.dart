@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flame/extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wordstation_flutter/src/components/circular_joystick.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
 import 'package:wordstation_flutter/src/components2/letter_block.dart';
 import 'package:wordstation_flutter/src/components2/pause_menu.dart';
@@ -31,7 +33,7 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreen2State();
 }
 
-int gridSize = 30;
+int gridSize = 40;
 int maxGrid = 20;
 Direction d = Direction(isHorizontal: true);
 
@@ -183,30 +185,38 @@ class _GameScreen2State extends State<GameScreen> {
         child: Column(
           children: [
             StatusBar(),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, "/entry");
-                },
-                child: Image(
-                  image: AssetImage(
-                      "images/png/Buttons/Square-Medium/Home/Default.png"),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            content: PauseMenu(),
-                          ));
-                },
-                child: Image(
-                  image: AssetImage(
-                      "images/png/Buttons/Square-Medium/Pause/Default.png"),
-                ),
-              ),
-            ]),
+            Padding(
+              padding: EdgeInsets.all(30),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, "/entry");
+                      },
+                      child: Image(
+                        image: AssetImage(
+                            "images/png/Buttons/Square-Medium/Home/Default.png"),
+                        width: 50,
+                        height: 50,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  content: PauseMenu(),
+                                ));
+                      },
+                      child: Image(
+                          image: AssetImage(
+                              "images/png/Buttons/Square-Medium/Pause/Default.png"),
+                          width: 50,
+                          height: 50),
+                    ),
+                  ]),
+            ),
             SizedBox(
               width: (gridSize * maxGrid).toDouble() + 20,
               height: (gridSize * maxGrid).toDouble() + 20,
@@ -217,6 +227,7 @@ class _GameScreen2State extends State<GameScreen> {
                 ],
               ),
             ),
+            // CircularJoystick()
           ],
         ),
       ),

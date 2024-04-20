@@ -32,9 +32,15 @@ class _LetterBlockState extends State<LetterBlock> {
       width: gridSize.toDouble(),
       height: gridSize.toDouble(),
       child: Container(
-          decoration:
-              BoxDecoration(border: Border.all(width: 2, color: Colors.blue)),
-          child: Text(widget.letter)),
+        // decoration:
+        // BoxDecoration(border: Border.all(width: 1, color: Colors.amber)),
+        alignment: Alignment.center,
+        color: Colors.white,
+        child: Text(
+          widget.letter,
+          style: TextStyle(color: Colors.amber),
+        ),
+      ),
     );
   }
 }

@@ -9,7 +9,7 @@ class PauseMenu extends StatelessWidget {
     return Column(children: [
       SizedBox(
         height: 100,
-        width: MediaQuery.of(context).size.width * .7,
+        width: MediaQuery.of(context).size.width,
         child: Container(
             color: Color.fromRGBO(3, 26, 15, 1),
             child: Text(
@@ -18,8 +18,8 @@ class PauseMenu extends StatelessWidget {
             )),
       ),
       SizedBox(
-        height: 400,
-        width: MediaQuery.of(context).size.width * .7,
+        width: MediaQuery.of(context).size.width * 1,
+        height: 200,
         child: Container(
           color: Color(0xFF323741),
           child: Column(
