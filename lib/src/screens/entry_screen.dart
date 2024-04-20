@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
+import 'package:wordstation_flutter/src/components2/credits.dart';
 import 'package:wordstation_flutter/src/providers/user.dart';
+import 'package:wordstation_flutter/src/screens/credits_screen.dart';
 
 class EntryScreen extends StatelessWidget {
   @override
@@ -55,7 +57,10 @@ class EntryScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacementNamed(context, "aa");
+                            Navigator.pushReplacementNamed(context, "/game",
+                                arguments: {
+                                  "level": userProvider.level,
+                                });
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: 60),
@@ -78,8 +83,14 @@ class EntryScreen extends StatelessWidget {
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          userProvider.makeTransaction(
-                              payloadDiamonds: 5, payloadCoins: 50);
+                          //   userProvider.makeTransaction(
+                          //       payloadDiamonds: 5, payloadCoins: 50);
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Credits(),
+                            ),
+                          );
                         },
                         child: Text("Credits")),
                     ElevatedButton(onPressed: () {}, child: Text("Quit"))

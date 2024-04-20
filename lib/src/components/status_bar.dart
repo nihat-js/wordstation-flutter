@@ -13,7 +13,7 @@ class StatusBar extends StatelessWidget {
     UserProvider provider = Provider.of<UserProvider>(context);
     return Container(
       height: 40,
-      color: Colors.blueGrey,
+      color: Color.fromARGB(124, 78, 27, 17),
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
