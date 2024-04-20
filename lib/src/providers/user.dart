@@ -13,7 +13,7 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin {
   UserProvider({required this.prefs}) {
     coins = prefs.getInt('coins') ?? 200;
     diamonds = prefs.getInt('diamonds') ?? 5;
-    level = prefs.getInt('level') ?? 1;
+    level = prefs.getInt('level') ?? 3;
     soundOn = prefs.getBool("soundOn") ?? true;
     musicOn = prefs.getBool("musicOn") ?? true;
   }

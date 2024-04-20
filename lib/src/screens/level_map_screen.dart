@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
+import 'package:wordstation_flutter/src/components2/pause_menu.dart';
 import 'package:wordstation_flutter/src/config.dart';
 import 'package:wordstation_flutter/src/providers/user.dart';
 
@@ -41,11 +42,34 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
                   ),
                   child: Column(
                     children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, "/entry");
-                          },
-                          child: Text("Go back")),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacementNamed(
+                                    context, "/entry");
+                              },
+                              child: Image(
+                                image: AssetImage(
+                                    "images/png/Buttons/Square-Medium/Home/Default.png"),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    content: PauseMenu(),
+                                  ),
+                                );
+                              },
+                              child: Image(
+                                image: AssetImage(
+                                    "images/png/Buttons/Square-Medium/Pause/Default.png"),
+                              ),
+                            ),
+                          ]),
                       Text(
                         "Levels",
                         style: TextStyle(
