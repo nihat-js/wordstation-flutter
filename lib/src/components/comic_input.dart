@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 class ComicInput extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onChanged;
-
+  final Function(String) onSubmitted;
   const ComicInput({
     Key? key,
     required this.controller,
     required this.onChanged,
+    required this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -22,6 +23,7 @@ class ComicInput extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        onSubmitted: onSubmitted,
         style: TextStyle(
           fontSize: 18,
           color: Colors.black,

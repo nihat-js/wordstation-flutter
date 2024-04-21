@@ -2,6 +2,7 @@ import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/letter_block.dart';
+import 'package:wordstation_flutter/src/components/not_enough_dialog.dart';
 import 'package:wordstation_flutter/src/providers/user.dart';
 
 class PowerUps extends StatelessWidget {
@@ -18,7 +19,10 @@ class PowerUps extends StatelessWidget {
 
     revealOneLetter() {
       print("letter");
-      if (provider.coins <= 0) {
+      if (provider.coins - 50 < 0) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(content: NotEnoughDialog()));
         return;
       }
       List<LetterBlock> my = [];
@@ -37,31 +41,46 @@ class PowerUps extends StatelessWidget {
       // .isRevealed = true;
     }
 
+    revealOneWord() {
+      if (provider.diamonds - 1 < 0) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(content: NotEnoughDialog()));
+        return;
+      }
+    }
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      // width: context.size?.width ?? 400,
       children: [
-        PowerUpButton(
-          icon: Icons.text_fields,
-          label: 'A letter ( - 50 coins)',
-          onPressed: revealOneLetter,
-        ),
-        PowerUpButton(
-          icon: Icons.auto_stories,
-          label: 'Reveal a word',
-          onPressed: revealOneLetter,
-        ),
-        PowerUpButton(
-          icon: Icons.video_library,
-          label: 'Reveal a word with Ads',
-          onPressed: revealOneLetter,
-        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            PowerUpButton(
+              icon: Icon(Icons.text_fields, color: Colors.teal),
+              label: '(-50 coins)',
+              onPressed: revealOneLetter,
+            ),
+            PowerUpButton(
+              icon: Icon(Icons.auto_stories, color: Colors.deepPurple),
+              label: '(-1 diamond)',
+              onPressed: revealOneLetter,
+            ),
+            // PowerUpButton(
+            //   icon: Icons.video_library,
+            //   label: 'Reveal a word with Ads',
+            //   onPressed: revealOneLetter,
+            // ),
+          ],
+        )
       ],
     );
   }
 }
 
 class PowerUpButton extends StatelessWidget {
-  final IconData icon;
+  final Icon icon;
   final String label;
   final Function onPressed;
 
@@ -76,16 +95,15 @@ class PowerUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconButton(
-          icon: Icon(icon),
+        ElevatedButton(
+          child: icon,
           onPressed: () {
             onPressed();
           },
-          iconSize: 48,
         ),
         Text(
           label,
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 12, color: Colors.white),
         ),
       ],
     );

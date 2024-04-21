@@ -3,13 +3,16 @@ import 'dart:math';
 import 'package:flame/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/circular_joystick.dart';
 import 'package:wordstation_flutter/src/components/comic_input.dart';
+import 'package:wordstation_flutter/src/components/level_finished_dialog.dart';
 import 'package:wordstation_flutter/src/components/powerups.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
 import 'package:wordstation_flutter/src/components/letter_block.dart';
 import 'package:wordstation_flutter/src/components/pause_menu.dart';
 import 'package:wordstation_flutter/src/config.dart';
+import 'package:wordstation_flutter/src/providers/user.dart';
 
 class Vector2 {
   double x;
@@ -35,13 +38,14 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreen2State();
 }
 
-int gridSize = 20;
+int gridSize = 30;
 int maxGrid = 20;
 Direction d = Direction(isHorizontal: true);
 
 class _GameScreen2State extends State<GameScreen> {
   late Level level;
-  late List<String> words = ["aze"];
+  late List<String> words = [];
+  late List<String> words2 = [];
   List<LetterBlock> letterBlocks = [];
   TextEditingController controller = TextEditingController();
   // List<String> words =
@@ -50,7 +54,10 @@ class _GameScreen2State extends State<GameScreen> {
     // TODO: implement initState
     super.initState();
     level = levels.firstWhere((item) => item.level == widget.level);
-    words = level.words;
+    for (int i = 0; i < level.words.length; i++) {
+      words.add(level.words[i]);
+      words2.add(level.words[i]);
+    }
     buildCrossword();
   }
 
@@ -154,7 +161,7 @@ class _GameScreen2State extends State<GameScreen> {
         d.toggleAxis(); // return back and get another word
         continue;
       }
-      print("yes you can place word");
+      // print("yes you can place word");
       intersectionLetterBlock.isUsedAsIntersection = true;
       nextWord.split("").forEach((letter) {
         letterBlocks.add(LetterBlock(
@@ -173,10 +180,51 @@ class _GameScreen2State extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // buildCrossword();
-    // letterBlocks.forEach((l) {
-    // print("This is x: ${l.x} y: ${l.y}");
-    // });
+    UserProvider user = Provider.of<UserProvider>(context);
+
+    void isGameFinished() async {
+      bool foo = letterBlocks.every((element) => element.isRevealed == true);
+      print("checking whether game is finished $foo");
+
+      if (!foo) {
+        return;
+      }
+      await user.levelUp();
+      print("yes finished");
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+              content: LevelFinishedDialog(nextLevel: widget.level + 1)));
+    }
+
+    void validate(String word) {
+      controller.text = "";
+      if (!words2.contains(word)) {
+        print("not a valid word $word");
+        return;
+      }
+      var foo = letterBlocks.where(
+          (element) => element.fullWord == word && element.isRevealed == true);
+      bool isRevealed = word.length == foo.length;
+
+      if (isRevealed) {
+        print("you have revealed it ");
+        return;
+      }
+
+      List<LetterBlock> my = [];
+      for (int i = 0; i < letterBlocks.length; i++) {
+        var item = letterBlocks[i];
+        if (item.fullWord == word && item.isRevealed == false) {
+          item = item.copyWithIsRevelead(true);
+        }
+        my.add(item);
+      }
+      setState(() {
+        letterBlocks = my;
+        isGameFinished();
+      });
+    }
 
     void updateLetterBlocks(List<LetterBlock> newLetterBlocks) {
       setState(() {
@@ -229,7 +277,7 @@ class _GameScreen2State extends State<GameScreen> {
             ),
             SizedBox(
               width: (gridSize * maxGrid).toDouble() + 20,
-              height: (gridSize * maxGrid).toDouble() + 20,
+              height: 300,
               child: Stack(
                 children: [
                   // Positioned(left: 100, top: 100, child: Text("GelG")),
@@ -242,12 +290,39 @@ class _GameScreen2State extends State<GameScreen> {
               updateLetterBlocks: updateLetterBlocks,
               letterBlocks: letterBlocks,
             ),
+
+            // showing letters
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: level.letters.map((letter) {
+                return Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black, width: 2),
+                    ),
+                    child: Text(
+                      letter,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily:
+                            'Comic Sans MS', // Choose a comic-style font
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+
             ComicInput(
                 controller: controller,
-                onChanged: (text) {
-                  // letter/("Text is $text");
-                  // letterBlocks = newLetterBlocks;
-                })
+                onSubmitted: validate,
+                onChanged: (text) {})
           ],
         ),
       ),

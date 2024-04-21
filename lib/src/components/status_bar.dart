@@ -20,7 +20,12 @@ class StatusBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.attach_money, color: Colors.yellow),
+              // Icon(Icons.attach_money, color: Colors.yellow),
+              Image(
+                image: AssetImage("images/coin.png"),
+                width: 30,
+                height: 30,
+              ),
               SizedBox(width: 1),
               Text('${provider.coins}', style: TextStyle(color: Colors.white)),
             ],
@@ -30,7 +35,10 @@ class StatusBar extends StatelessWidget {
           ),
           Row(
             children: [
-              Icon(Icons.diamond, color: Colors.amber),
+              // Icon(Icons.diamond, color: Colors.amber),
+              Image(
+                  image: AssetImage("images/gold.png"), width: 30, height: 30),
+
               SizedBox(width: 1),
               Text('${provider.diamonds} ',
                   style: TextStyle(color: Colors.white)),

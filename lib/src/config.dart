@@ -7,6 +7,7 @@ class Level {
   final List<String> words;
   final List<String> extraWords;
   final String backgroundImage;
+  late final List<String> letters;
 
   Level({
     required this.name,
@@ -14,50 +15,68 @@ class Level {
     required this.words,
     required this.extraWords,
     required this.backgroundImage,
-  });
+  }) {
+    List<String> foo = [];
+    words.forEach((word) {
+      word.split("").forEach((letter) {
+        if (!foo.contains(letter)) {
+          foo.add(letter);
+        }
+      });
+    });
+    letters = foo;
+  }
 }
 
 List<Level> levels = [
   Level(
     name: "Gabala",
     level: 1,
-    words: ["imtina", "min", "tin", "amin", "mina"],
+    words: ["dar", "kadr", "kar"],
     extraWords: [],
-    backgroundImage: "images/baku-1.jpg",
+    // letters: ["k", "a", "r", "d"],
+    backgroundImage: "images/gabala-1.jpg",
   ),
   Level(
     name: "Baku",
     level: 2,
-    words: ["sonra", "son", "sara", "sar"],
-    extraWords: ["onar", "ona"],
-    backgroundImage: "images/baku-2.jpg",
+    words: ["inad", "adi", "din"],
+    // letters: ["i", "n", "a", "d"],
+    extraWords: [],
+    backgroundImage: "images/gabala-2.jpg",
   ),
   Level(
     name: "Gabala",
     level: 3,
-    words: ["imtina", "min", "tin", "amin", "mina"],
+    words: ["qara", "araq", "ara"],
+    // letters: ["a", "r", "a", "q"],
     extraWords: [],
     backgroundImage: "images/baku-1.jpg",
   ),
   Level(
     name: "Baku",
     level: 4,
-    words: ["sonra", "son", "sara", "sar"],
+    words: ["rota", "tor", "orta", "tar"],
+    // letters: ["r", "o", "t", "a"],
     extraWords: ["onar", "ona"],
     backgroundImage: "images/baku-2.jpg",
   ),
   Level(
     name: "Gabala",
     level: 5,
-    words: ["imtina", "min", "tin", "amin", "mina"],
+    words: ["tam", "ata", "atma", "mat"],
+    // letters: ["a", "t", "m", "a"],
     extraWords: [],
-    backgroundImage: "images/baku-1.jpg",
+    backgroundImage: "images/baku-3.jpg",
   ),
+
+  // bura qeder islemelidi
   Level(
     name: "Baku",
     level: 6,
     words: ["sonra", "son", "sara", "sar"],
     extraWords: ["onar", "ona"],
+    // letters: [],
     backgroundImage: "images/baku-2.jpg",
   ),
   Level(
@@ -65,6 +84,7 @@ List<Level> levels = [
     level: 7,
     words: ["imtina", "min", "tin", "amin", "mina"],
     extraWords: [],
+    // letters: [],
     backgroundImage: "images/baku-1.jpg",
   ),
   Level(
@@ -72,6 +92,7 @@ List<Level> levels = [
     level: 8,
     words: ["sonra", "son", "sara", "sar"],
     extraWords: ["onar", "ona"],
+    // letters: [],
     backgroundImage: "images/baku-2.jpg",
   ),
   Level(
@@ -79,6 +100,7 @@ List<Level> levels = [
     level: 9,
     words: ["imtina", "min", "tin", "amin", "mina"],
     extraWords: [],
+    // letters: [],
     backgroundImage: "images/baku-1.jpg",
   ),
   Level(
@@ -86,6 +108,7 @@ List<Level> levels = [
     level: 10,
     words: ["sonra", "son", "sara", "sar"],
     extraWords: ["onar", "ona"],
+    // letters: [],
     backgroundImage: "images/baku-2.jpg",
   ),
 ];
