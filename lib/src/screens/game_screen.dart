@@ -4,9 +4,11 @@ import 'package:flame/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wordstation_flutter/src/components/circular_joystick.dart';
+import 'package:wordstation_flutter/src/components/comic_input.dart';
+import 'package:wordstation_flutter/src/components/powerups.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
-import 'package:wordstation_flutter/src/components2/letter_block.dart';
-import 'package:wordstation_flutter/src/components2/pause_menu.dart';
+import 'package:wordstation_flutter/src/components/letter_block.dart';
+import 'package:wordstation_flutter/src/components/pause_menu.dart';
 import 'package:wordstation_flutter/src/config.dart';
 
 class Vector2 {
@@ -33,7 +35,7 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreen2State();
 }
 
-int gridSize = 40;
+int gridSize = 20;
 int maxGrid = 20;
 Direction d = Direction(isHorizontal: true);
 
@@ -41,7 +43,7 @@ class _GameScreen2State extends State<GameScreen> {
   late Level level;
   late List<String> words = ["aze"];
   List<LetterBlock> letterBlocks = [];
-
+  TextEditingController controller = TextEditingController();
   // List<String> words =
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _GameScreen2State extends State<GameScreen> {
     super.initState();
     level = levels.firstWhere((item) => item.level == widget.level);
     words = level.words;
+    buildCrossword();
   }
 
   void buildCrossword() {
@@ -108,8 +111,8 @@ class _GameScreen2State extends State<GameScreen> {
           : intersectionLetterBlock.y;
       double copyStartX = startX;
       double copyStartY = startY;
-      print(
-          "next word is $nextWord intersection letter is ${intersectionLetterBlock.letter} offset is $offset");
+      // print(
+      //     "next word is $nextWord intersection letter is ${intersectionLetterBlock.letter} offset is $offset");
       // print("isHorizontal ${d.isHorizontal}");
       // print("startX is $startX startY is $startY");
       bool canPlaceWord = nextWord.split("").every((letter) {
@@ -126,7 +129,7 @@ class _GameScreen2State extends State<GameScreen> {
           if (d.isHorizontal &&
               copyStartX == element.x &&
               copyStartX != intersectionLetterBlock.x) {
-            print("114e gird");
+            // print("114e gird");
             st3 = copyStartY + 1 != element.y && copyStartY - 1 != element.y;
           }
 
@@ -135,14 +138,14 @@ class _GameScreen2State extends State<GameScreen> {
               copyStartY != intersectionLetterBlock.y) {
             st3 = copyStartX + 1 != element.x && copyStartX - 1 != element.x;
             if (st3 == false) {
-              print(
-                  "copyStartX = $copyStartX, copyStartY = $copyStartY Element.x = ${element.x} element.y = ${element.y}");
+              // print(
+              //     "copyStartX = $copyStartX, copyStartY = $copyStartY Element.x = ${element.x} element.y = ${element.y}");
             }
           }
-          print("st1 is $st1 st2 is $st2 st3 is $st3");
+          // print("st1 is $st1 st2 is $st2 st3 is $st3");
           return (st1 || st2) && st3;
         });
-        print("end of one letterBlock and st is $st");
+        // print("end of one letterBlock and st is $st");
         d.isHorizontal ? copyStartX++ : copyStartY++;
         return st;
       });
@@ -174,7 +177,14 @@ class _GameScreen2State extends State<GameScreen> {
     // letterBlocks.forEach((l) {
     // print("This is x: ${l.x} y: ${l.y}");
     // });
-    buildCrossword();
+
+    void updateLetterBlocks(List<LetterBlock> newLetterBlocks) {
+      setState(() {
+        // letter/ = newWords;
+        letterBlocks = newLetterBlocks;
+      });
+    }
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -228,6 +238,16 @@ class _GameScreen2State extends State<GameScreen> {
               ),
             ),
             // CircularJoystick()
+            PowerUps(
+              updateLetterBlocks: updateLetterBlocks,
+              letterBlocks: letterBlocks,
+            ),
+            ComicInput(
+                controller: controller,
+                onChanged: (text) {
+                  // letter/("Text is $text");
+                  // letterBlocks = newLetterBlocks;
+                })
           ],
         ),
       ),

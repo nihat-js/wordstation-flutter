@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
-import 'package:wordstation_flutter/src/components2/pause_menu.dart';
+import 'package:wordstation_flutter/src/components/pause_menu.dart';
 import 'package:wordstation_flutter/src/config.dart';
 import 'package:wordstation_flutter/src/providers/user.dart';
 

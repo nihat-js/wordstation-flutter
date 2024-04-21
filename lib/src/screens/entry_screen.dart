@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:wordstation_flutter/src/components/status_bar.dart';
-import 'package:wordstation_flutter/src/components2/credits.dart';
+import 'package:wordstation_flutter/src/components/credits.dart';
 import 'package:wordstation_flutter/src/providers/user.dart';
 
 class EntryScreen extends StatelessWidget {

@@ -19,6 +19,19 @@ class LetterBlock extends StatefulWidget {
       this.isUsedAsIntersection = false,
       super.key});
 
+  LetterBlock copyWithIsRevelead(
+    bool newIsRevealed,
+  ) =>
+      LetterBlock(
+        isRevealed: newIsRevealed,
+        x: x,
+        y: y,
+        letter: letter,
+        fullWord: fullWord,
+        isHorizontal: isHorizontal,
+        isUsedAsIntersection: isUsedAsIntersection,
+      );
+
   @override
   State<LetterBlock> createState() => _LetterBlockState();
 }
@@ -37,7 +50,7 @@ class _LetterBlockState extends State<LetterBlock> {
         alignment: Alignment.center,
         color: Colors.white,
         child: Text(
-          widget.letter,
+          widget.isRevealed ? widget.letter : "",
           style: TextStyle(color: Colors.amber),
         ),
       ),
