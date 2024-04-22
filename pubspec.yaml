@@ -10,10 +10,12 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
+  change_app_package_name: ^1.1.0
   circular_menu: ^2.0.1
   flame: ^1.17.0
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
   flutter_localizations:
     sdk: flutter
   provider: ^6.1.2
@@ -35,3 +37,8 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/images/
     - assets/images/bg.jpg
+
+flutter_icons:
+  image_path: "assets/images/icon.png"
+  android: true
+  ios: true

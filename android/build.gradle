@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Add your dependencies here
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -8,17 +18,4 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(':app')
-}
-
-tasks.register("clean", Delete) {
-    delete rootProject.buildDir
-}
-
-buildTypes {
-    release {
-        signingConfig signingConfigs.release
-    }
 }
